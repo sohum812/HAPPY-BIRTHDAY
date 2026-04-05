@@ -51,7 +51,6 @@
             text-align: center;
         }
 
-       
         @media (max-width: 600px) {
             .start-button {
                 width: 80%;
@@ -102,22 +101,25 @@
             justify-content: center;
             align-items: center;
             margin-bottom: 20px; 
+            width: 100%;
+            height: 400px;
         }
 
         .teddy-part {
             position: absolute;
             pointer-events: none;
             user-select: none;
+            transition: opacity 2s ease;
         }
 
         .teddy-body-back {
             font-size: clamp(300px, 60vw, 500px);
             z-index: 5;
-            bottom: -80px;
+            opacity: 1;
         }
 
         .letter-wrapper {
-            position: relative;
+            position: absolute;
             width: clamp(280px, 50vw, 450px);
             height: clamp(180px, 35vw, 300px);
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
@@ -128,11 +130,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: transform 0.3s ease, opacity 0.6s ease;
+            transition: transform 0.3s ease, opacity 2s ease;
             z-index: 10;
             overflow: hidden;
             border-radius: 12px;
             border: 4px solid rgba(255,255,255,0.2);
+            opacity: 0;
         }
 
         .letter-wrapper:hover {
@@ -221,6 +224,8 @@
             pointer-events: none;
             z-index: 4;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: opacity 2s ease;
         }
 
         .click-hint {
@@ -230,6 +235,8 @@
             letter-spacing: 2px;
             color: var(--accent);
             animation: pulseHint 1.5s infinite;
+            opacity: 0;
+            transition: opacity 2s ease;
         }
 
         @keyframes pulseHint { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.05); } }
@@ -290,9 +297,8 @@
 
         .popup-next-btn:hover { transform: scale(1.1); }
 
-        /* --- STYLES FOR SCENE 1 IMAGE --- */
         .scene1-image-container {
-            width: clamp(200px, 50vw, 400px); /* Responsive width */
+            width: clamp(200px, 50vw, 400px); 
             height: auto;
             animation: bounce 2s infinite ease-in-out;
             margin-bottom: 20px;
@@ -301,10 +307,9 @@
         .scene1-image {
             width: 100%;
             height: auto;
-            border-radius: 15px; /* Optional: adds rounded corners */
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5); /* Optional: adds a shadow */
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
-        /* ---------------------------------- */
 
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
@@ -392,7 +397,7 @@
 
     <div id="scene3" class="scene">
         <div class="delivery-wrapper">
-            <div class="teddy-part teddy-body-back">
+            <div class="teddy-part teddy-body-back" id="teddy-scene3">
                 <img src="teddy.png" alt="Birthday Celebration" class="scene1-image">
             </div>
             <div class="letter-wrapper" id="envelope" onclick="openLetter()">
@@ -405,8 +410,8 @@
                 </div>
             </div>
         </div>
-        <div class="letter-text">A Message for You...</div>
-        <div class="click-hint">CLICK ON THE ENVELOPE TO OPEN IT</div>
+        <div class="letter-text" id="msg-text">A Message for You...</div>
+        <div class="click-hint" id="hint-text">CLICK ON THE ENVELOPE TO OPEN IT</div>
     </div>
 
     <div id="scene4" class="scene">
@@ -429,7 +434,6 @@
         
         function startEverything() {
             music.play().catch(e => console.log("Audio failed"));
-            
             document.getElementById('start-screen').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('start-screen').style.display = 'none';
@@ -480,10 +484,33 @@
                 document.getElementById(curr).style.display = 'none';
                 const n = document.getElementById(next);
                 n.style.display = 'flex';
+                
                 setTimeout(() => {
                     n.classList.add('active-scene');
                     if(next === 'scene2') typeDate();
+                    
+                    if(next === 'scene3') {
+                        // Immediately show the "A Message for You..." text
+                        document.getElementById('msg-text').style.opacity = '1';
+                        
+                        setTimeout(() => {
+                            // Teddy fades out
+                            document.getElementById('teddy-scene3').style.opacity = '0';
+                            
+                            // Envelope starts its 2s fade-in
+                            const envelope = document.getElementById('envelope');
+                            envelope.style.opacity = '1';
+                            
+                            // Hint text will only appear AFTER the envelope has fully faded in
+                            // Envelope transition is 2s (set in CSS), so we wait 2s for it to finish
+                            setTimeout(() => {
+                                document.getElementById('hint-text').style.opacity = '1';
+                            }, 10000); 
+
+                        }, 2000);
+                    }
                 }, 50);
+
                 if(next === 'scene2') setTimeout(blowCandle, 6000);
             }, 1000);
         }
