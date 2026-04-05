@@ -290,7 +290,22 @@
 
         .popup-next-btn:hover { transform: scale(1.1); }
 
-        .teddy-container { font-size: 200px; animation: bounce 2s infinite ease-in-out; }
+        /* --- STYLES FOR SCENE 1 IMAGE --- */
+        .scene1-image-container {
+            width: clamp(200px, 50vw, 400px); /* Responsive width */
+            height: auto;
+            animation: bounce 2s infinite ease-in-out;
+            margin-bottom: 20px;
+        }
+
+        .scene1-image {
+            width: 100%;
+            height: auto;
+            border-radius: 15px; /* Optional: adds rounded corners */
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5); /* Optional: adds a shadow */
+        }
+        /* ---------------------------------- */
+
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
         .cake { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 300px; width: 300px; perspective: 1000px; margin-bottom: 20px; }
@@ -356,7 +371,9 @@
     </div>
 
     <div id="scene1" class="scene">
-        <div class="teddy-container">🧸</div>
+        <div class="scene1-image-container">
+            <img src="teddy.png" alt="Birthday Celebration" class="scene1-image">
+        </div>
         <div id="type-target" style="font-family: 'Dancing Script'; font-size: 2.5rem; color: var(--accent); margin-top: 15px;"></div>
     </div>
 
@@ -375,7 +392,9 @@
 
     <div id="scene3" class="scene">
         <div class="delivery-wrapper">
-            <div class="teddy-part teddy-body-back">🧸</div>
+            <div class="teddy-part teddy-body-back">
+                <img src="teddy.png" alt="Birthday Celebration" class="scene1-image">
+            </div>
             <div class="letter-wrapper" id="envelope" onclick="openLetter()">
                 <div class="envelope-flap"></div>
                 <div class="ribbon-vertical"></div>
