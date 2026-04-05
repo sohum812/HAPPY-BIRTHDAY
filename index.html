@@ -236,7 +236,7 @@
             color: var(--accent);
             animation: pulseHint 1.5s infinite;
             opacity: 0;
-            transition: opacity 1s ease; /* Faster transition for disappearing */
+            transition: opacity 0.5s ease;
         }
 
         @keyframes pulseHint { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.05); } }
@@ -497,7 +497,7 @@
                         const envelope = document.getElementById('envelope');
                         envelope.style.opacity = '1';
                         
-                        // HINT LOGIC FIX: Only show hint if envelope hasn't been opened yet
+                        // NEW LOGIC: Hint appears ONLY after envelope opacity transition (2s) is done
                         setTimeout(() => {
                             const isOpened = document.getElementById('envelope').classList.contains('open');
                             if (!isOpened) {
@@ -521,8 +521,9 @@
         const env = document.getElementById('envelope');
         const hint = document.getElementById('hint-text');
         
-        // HIDE HINT IMMEDIATELY
-        hint.style.display = 'none'; 
+        // DISAPPEAR IMMEDIATELY on click
+        hint.style.opacity = '0';
+        setTimeout(() => { hint.style.display = 'none'; }, 500); 
         
         env.classList.add('open');
         setTimeout(() => {
