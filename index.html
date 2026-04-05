@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy Birthday</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@200;400;600&display=swap');
+
+        :root {
+            --space-bg: #05050a;
+            --nebula-1: #1a0b2e;
+            --accent: #00e5ff; 
+            --cake-pink: #ff85a1;
+            --cake-yellow: #fff176;
+            --letter-bg: #ffffff;
+            --bow-pink: #ff4081;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--space-bg), var(--nebula-1), var(--space-bg));
+            color: white;
+        }
+
+        /* --- START OVERLAY SECTION --- */
+        #start-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--space-bg);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease;
+        }
+        .start-button {
+            padding: 15px 30px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            background: var(--bow-pink);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 64, 129, 0.5);
+            text-align: center;
+        }
+
+       
+        @media (max-width: 600px) {
+            .start-button {
+                width: 80%;
+                font-size: 1.2rem; 
+                padding: 12px 10px;
+            }
+        }
+        /* ---------------------------- */
+
+        .ribbon-bg-layer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1; 
+            overflow: hidden;
+        }
+        .falling-ribbon {
+            position: absolute;
+            top: -150px;
+            width: 2px;
+            height: 100px;
+            background: linear-gradient(to bottom, transparent, var(--bow-pink), transparent);
+            animation: fallVertical linear infinite;
+        }
+        @keyframes fallVertical {
+            to { transform: translateY(110vh); }
+        }
+
+        .scene {
+            position: absolute;
+            width: 100%; height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 1s ease;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .active-scene { display: flex; opacity: 1; }
+
+        .delivery-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px; 
+        }
+
+        .teddy-part {
+            position: absolute;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .teddy-body-back {
+            font-size: clamp(300px, 60vw, 500px);
+            z-index: 5;
+            bottom: -80px;
+        }
+
+        .letter-wrapper {
+            position: relative;
+            width: clamp(280px, 50vw, 450px);
+            height: clamp(180px, 35vw, 300px);
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite, envelopeFloat 3s infinite ease-in-out;
+            cursor: pointer;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease, opacity 0.6s ease;
+            z-index: 10;
+            overflow: hidden;
+            border-radius: 12px;
+            border: 4px solid rgba(255,255,255,0.2);
+        }
+
+        .letter-wrapper:hover {
+            transform: scale(1.03) rotate(-1deg);
+        }
+
+        @keyframes envelopeFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px 12px 0 0;
+            clip-path: polygon(0 0, 100% 0, 50% 60%);
+            transition: transform 0.6s ease;
+            z-index: 5;
+            transform-origin: top;
+        }
+
+        .letter-wrapper.open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+
+        .ribbon-vertical {
+            position: absolute;
+            top: 0; left: 50%;
+            width: 40px; height: 100%;
+            background-color: var(--bow-pink);
+            transform: translateX(-50%);
+            z-index: 6;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        .bow-wrap {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px; height: 100px;
+            z-index: 7;
+        }
+
+        .bow-loop {
+            position: absolute;
+            top: 0;
+            width: 70px; height: 90px;
+            background-color: var(--bow-pink);
+            border-radius: 50% 50% 10% 10%;
+            box-shadow: inset 0 10px 15px rgba(0,0,0,0.1), 0 5px 10px rgba(0,0,0,0.2);
+        }
+
+        .bow-loop.left { left: 0; transform: rotate(-35deg); }
+        .bow-loop.right { right: 0; transform: rotate(35deg); }
+
+        .bow-knot {
+            position: absolute;
+            top: 35px; left: 50%;
+            transform: translateX(-50%);
+            width: 45px; height: 45px;
+            background-color: var(--bow-pink);
+            border-radius: 50%;
+            z-index: 8;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .letter-wrapper.open .ribbon-vertical,
+        .letter-wrapper.open .bow-wrap {
+            display: none;
+        }
+
+        .letter-text {
+            color: #aee00a;
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            pointer-events: none;
+            z-index: 4;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .click-hint {
+            margin-top: 30px;
+            font-family: 'Poppins';
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            color: var(--accent);
+            animation: pulseHint 1.5s infinite;
+        }
+
+        @keyframes pulseHint { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.05); } }
+
+        #manuscript-popup {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: clamp(300px, 80vw, 500px);
+            min-height: 400px;
+            background: #fdf5e6;
+            background-image: url('https://www.transparenttextures.com/patterns/old-map.png');
+            color: #4a3728;
+            padding: 40px;
+            z-index: 100;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            clip-path: polygon(0% 5%, 5% 2%, 10% 5%, 90% 0%, 95% 4%, 100% 2%, 98% 30%, 100% 70%, 97% 95%, 70% 98%, 30% 100%, 5% 97%, 0% 70%, 2% 30%);
+            box-shadow: 20px 20px 60px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #d2b48c;
+        }
+
+        @media (min-width: 1025px) { .popup-active { transform: translate(-50%, -50%) scale(1.2) !important; } }
+        @media (max-width: 1024px) and (min-width: 601px) { .popup-active { transform: translate(-50%, -50%) scale(1) !important; } }
+        @media (max-width: 600px) { .popup-active { transform: translate(-50%, -50%) scale(0.85) !important; } }
+
+        .popup-bow {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            transform: scale(0.4);
+            pointer-events: none;
+        }
+
+        .manuscript-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.6rem;
+            line-height: 1.5;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .popup-next-btn {
+            background: var(--bow-pink);
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            font-family: 'Poppins';
+            font-weight: 600;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .popup-next-btn:hover { transform: scale(1.1); }
+
+        .teddy-container { font-size: 200px; animation: bounce 2s infinite ease-in-out; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        .cake { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 300px; width: 300px; perspective: 1000px; margin-bottom: 20px; }
+        .tier { position: relative; border-radius: 0 0 100px 100px / 0 0 40px 40px; border: 1px solid rgba(255,255,255,0.1); }
+        .tier::before { content: ''; position: absolute; top: -15px; left: -1px; width: calc(100% + 2px); height: 30px; border-radius: 50%; background: inherit; }
+        .tier-bottom { width: 250px; height: 80px; background: var(--cake-pink); z-index: 1; }
+        .tier-mid { width: 190px; height: 70px; background: var(--cake-yellow); z-index: 2; margin-bottom: -35px; }
+        .tier-top { width: 130px; height: 60px; background: var(--cake-pink); z-index: 3; margin-bottom: -30px; }
+        
+        #candle-stick { width: 8px; height: 45px; background: linear-gradient(to right, #eee, #fff, #eee); position: absolute; top: -65px; left: 50%; transform: translateX(-50%); z-index: 4; border-radius: 2px; }
+        #flame { width: 12px; height: 20px; background: #ffcc00; border-radius: 50% 50% 20% 20%; position: absolute; top: -85px; left: 50%; transform: translateX(-50%); box-shadow: 0 0 15px #ff9900; z-index: 5; transition: opacity 0.5s ease; }
+
+        #orbit-system { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transform-style: preserve-3d; }
+        #satellite-container { position: absolute; width: 100%; height: 100%; transform-style: preserve-3d; animation: rotateSystem 25s linear infinite; animation-play-state: paused; }
+        .photo-card { position: absolute; background: #111; padding: 8px; border-radius: 8px; opacity: 0; object-fit: cover; left: 50%; top: 50%; transition: transform 0.6s ease, opacity 1s ease; border: 1px solid rgba(255,255,255,0.1); }
+        
+        .photo-main { z-index: 100; width: 230px; height: 310px; margin-left: -115px; margin-top: -155px; border: 4px solid white; }
+        .photo-orbit { width: 185px; height: 250px; margin-left: -92.5px; margin-top: -125px; }
+
+        #date-typing {
+            font-family: 'Dancing Script', sans-serif;
+            font-size: clamp(3.2rem, 5vw, 4rem);
+            color: var(--cake-yellow);
+            font-weight: 600;
+            min-height: 1.5em;
+            letter-spacing: 1px;
+        }
+
+        @media (orientation: portrait) {
+            .photo-main { width: 180px; height: 250px; margin-left: -90px; margin-top: -125px; }
+            .photo-orbit { width: 108px; height: 150px; margin-left: -54px; margin-top: -75px; }
+        }
+
+        @keyframes rotateSystem { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+        .final-wish { font-family: 'Dancing Script'; font-size: 2rem; color: var(--accent); position: absolute; bottom: 8%; opacity: 0; width: 100%; }
+    </style>
+</head>
+<body>
+
+    <div id="start-screen">
+        <button class="start-button" onclick="startEverything()">Click to Celebrate Your Birthday! ✨</button>
+    </div>
+
+    <audio id="bg-music" loop>
+        <source src="saiyara.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="ribbon-bg-layer" id="ribbon-layer"></div>
+
+    <div id="manuscript-popup">
+        <div class="popup-bow">
+            <div class="bow-wrap">
+                <div class="bow-loop left"></div>
+                <div class="bow-loop right"></div>
+                <div class="bow-knot"></div>
+            </div>
+        </div>
+        <div class="manuscript-text">
+            Hello Sumitra,<br><br>
+            You are the most special person in my life. Every moment with you is a treasure. I hope this year brings you as much happiness as you bring to everyone around you!
+        </div>
+        <button class="popup-next-btn" onclick="goToOrbit()">Next →</button>
+    </div>
+
+    <div id="scene1" class="scene">
+        <div class="teddy-container">🧸</div>
+        <div id="type-target" style="font-family: 'Dancing Script'; font-size: 2.5rem; color: var(--accent); margin-top: 15px;"></div>
+    </div>
+
+    <div id="scene2" class="scene">
+        <h1 style="font-family: 'Dancing Script'; color: var(--accent);">Blow the Candle and <br>Make a wish...</h1>
+        <div class="cake">
+            <div class="tier tier-top">
+                <div id="candle-stick"></div>
+                <div id="flame"></div>
+            </div>
+            <div class="tier tier-mid"></div>
+            <div class="tier tier-bottom"></div>
+        </div>
+        <div id="date-typing"></div>
+    </div>
+
+    <div id="scene3" class="scene">
+        <div class="delivery-wrapper">
+            <div class="teddy-part teddy-body-back">🧸</div>
+            <div class="letter-wrapper" id="envelope" onclick="openLetter()">
+                <div class="envelope-flap"></div>
+                <div class="ribbon-vertical"></div>
+                <div class="bow-wrap">
+                    <div class="bow-loop left"></div>
+                    <div class="bow-loop right"></div>
+                    <div class="bow-knot"></div>
+                </div>
+            </div>
+        </div>
+        <div class="letter-text">A Message for You...</div>
+        <div class="click-hint">CLICK ON THE ENVELOPE TO OPEN IT</div>
+    </div>
+
+    <div id="scene4" class="scene">
+        <div id="orbit-system">
+            <div id="satellite-container">
+                <img src="https://picsum.photos/seed/a1/400/600" class="photo-card photo-orbit">
+                <img src="https://picsum.photos/seed/a2/400/600" class="photo-card photo-orbit">
+                <img src="https://picsum.photos/seed/a3/400/600" class="photo-card photo-orbit">
+                <img src="https://picsum.photos/seed/a4/400/600" class="photo-card photo-orbit">
+                <img src="https://picsum.photos/seed/a5/400/600" class="photo-card photo-orbit">
+                <img src="https://picsum.photos/seed/a6/400/600" class="photo-card photo-orbit">
+            </div>
+            <img src="https://picsum.photos/seed/m1/500/750" class="photo-card photo-main" id="center-photo">
+        </div>
+        <div class="final-wish" id="final-text">Happy Birthday, Sumitra! ❤️</div>
+    </div>
+
+    <script>
+        const music = document.getElementById('bg-music');
+        
+        function startEverything() {
+            music.play().catch(e => console.log("Audio failed"));
+            
+            document.getElementById('start-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('start-screen').style.display = 'none';
+                document.getElementById('scene1').classList.add('active-scene');
+                document.getElementById('scene1').style.display = 'flex';
+                typeWriter();
+            }, 800);
+        }
+
+        const layer = document.getElementById('ribbon-layer');
+        for (let i = 0; i < 25; i++) {
+            const r = document.createElement('div');
+            r.className = 'falling-ribbon';
+            r.style.left = Math.random() * 100 + 'vw';
+            r.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            r.style.animationDelay = Math.random() * 5 + 's';
+            r.style.opacity = Math.random() * 0.5 + 0.2;
+            layer.appendChild(r);
+        }
+
+        const words = "Happy Birthday, Sumitra.";
+        let charIndex = 0;
+        function typeWriter() {
+            const target = document.getElementById('type-target');
+            if (charIndex < words.length) {
+                target.innerHTML += words.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeWriter, 100);
+            } else {
+                setTimeout(() => transition('scene1', 'scene2'), 2000);
+            }
+        }
+
+        const birthdayDate = "April 20, 2026";
+        let dateIndex = 0;
+        function typeDate() {
+            const dateTarget = document.getElementById('date-typing');
+            if (dateIndex < birthdayDate.length) {
+                dateTarget.innerHTML += birthdayDate.charAt(dateIndex);
+                dateIndex++;
+                setTimeout(typeDate, 150);
+            }
+        }
+
+        function transition(curr, next) {
+            document.getElementById(curr).classList.remove('active-scene');
+            setTimeout(() => {
+                document.getElementById(curr).style.display = 'none';
+                const n = document.getElementById(next);
+                n.style.display = 'flex';
+                setTimeout(() => {
+                    n.classList.add('active-scene');
+                    if(next === 'scene2') typeDate();
+                }, 50);
+                if(next === 'scene2') setTimeout(blowCandle, 6000);
+            }, 1000);
+        }
+
+        function blowCandle() {
+            document.getElementById('flame').style.opacity = '0';
+            setTimeout(() => transition('scene2', 'scene3'), 1500);
+        }
+
+        function openLetter() {
+            const env = document.getElementById('envelope');
+            env.classList.add('open');
+            setTimeout(() => {
+                document.getElementById('manuscript-popup').classList.add('popup-active');
+            }, 800);
+        }
+
+        function goToOrbit() {
+            document.getElementById('manuscript-popup').classList.remove('popup-active');
+            const env = document.getElementById('envelope');
+            env.style.transform = "scale(0) translateY(-200px)";
+            env.style.opacity = "0";
+            setTimeout(() => {
+                transition('scene3', 'scene4');
+                setTimeout(startOrbit, 1200);
+            }, 500);
+        }
+
+        function startOrbit() {
+            const orbits = document.querySelectorAll('.photo-orbit');
+            const main = document.getElementById('center-photo');
+            const container = document.getElementById('satellite-container');
+            const isPortrait = window.innerHeight > window.innerWidth;
+            const radius = isPortrait ? window.innerWidth * 0.4 : window.innerWidth * 0.4;
+
+            [...orbits, main].forEach((p, idx) => {
+                setTimeout(() => {
+                    p.style.opacity = '1';
+                    if (p !== main) {
+                        const angle = (idx / orbits.length) * 360;
+                        const x = Math.sin(angle * Math.PI / 180) * radius;
+                        const z = Math.cos(angle * Math.PI / 180) * radius;
+                        p.style.transform = `translateX(${x}px) translateZ(${z}px) rotateY(${angle}deg)`;
+                    } else {
+                        p.style.transform = `translateZ(50px)`;
+                    }
+                }, idx * 150);
+            });
+
+            setTimeout(() => {
+                container.style.animationPlayState = 'running';
+                document.getElementById('final-text').style.opacity = '1';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
