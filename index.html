@@ -236,7 +236,7 @@
             color: var(--accent);
             animation: pulseHint 1.5s infinite;
             opacity: 0;
-            transition: opacity 2s ease;
+            transition: opacity 1s ease; /* Faster transition for disappearing */
         }
 
         @keyframes pulseHint { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.05); } }
@@ -429,142 +429,144 @@
         <div class="final-wish" id="final-text">Happy Birthday, Sumitra! ❤️</div>
     </div>
 
-    <script>
-        const music = document.getElementById('bg-music');
-        
-        function startEverything() {
-            music.play().catch(e => console.log("Audio failed"));
-            document.getElementById('start-screen').style.opacity = '0';
+   <script>
+    const music = document.getElementById('bg-music');
+    
+    function startEverything() {
+        music.play().catch(e => console.log("Audio failed"));
+        document.getElementById('start-screen').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('scene1').classList.add('active-scene');
+            document.getElementById('scene1').style.display = 'flex';
+            typeWriter();
+        }, 800);
+    }
+
+    // Ribbon Background logic
+    const layer = document.getElementById('ribbon-layer');
+    for (let i = 0; i < 25; i++) {
+        const r = document.createElement('div');
+        r.className = 'falling-ribbon';
+        r.style.left = Math.random() * 100 + 'vw';
+        r.style.animationDuration = (Math.random() * 2 + 3) + 's';
+        r.style.animationDelay = Math.random() * 5 + 's';
+        r.style.opacity = Math.random() * 0.5 + 0.2;
+        layer.appendChild(r);
+    }
+
+    const words = "Happy Birthday, Sumitra.";
+    let charIndex = 0;
+    function typeWriter() {
+        const target = document.getElementById('type-target');
+        if (charIndex < words.length) {
+            target.innerHTML += words.charAt(charIndex);
+            charIndex++;
+            setTimeout(typeWriter, 100);
+        } else {
+            setTimeout(() => transition('scene1', 'scene2'), 2000);
+        }
+    }
+
+    const birthdayDate = "April 20, 2026";
+    let dateIndex = 0;
+    function typeDate() {
+        const dateTarget = document.getElementById('date-typing');
+        if (dateIndex < birthdayDate.length) {
+            dateTarget.innerHTML += birthdayDate.charAt(dateIndex);
+            dateIndex++;
+            setTimeout(typeDate, 150);
+        }
+    }
+
+    function transition(curr, next) {
+        document.getElementById(curr).classList.remove('active-scene');
+        setTimeout(() => {
+            document.getElementById(curr).style.display = 'none';
+            const n = document.getElementById(next);
+            n.style.display = 'flex';
+            
             setTimeout(() => {
-                document.getElementById('start-screen').style.display = 'none';
-                document.getElementById('scene1').classList.add('active-scene');
-                document.getElementById('scene1').style.display = 'flex';
-                typeWriter();
-            }, 800);
-        }
-
-        const layer = document.getElementById('ribbon-layer');
-        for (let i = 0; i < 25; i++) {
-            const r = document.createElement('div');
-            r.className = 'falling-ribbon';
-            r.style.left = Math.random() * 100 + 'vw';
-            r.style.animationDuration = (Math.random() * 2 + 3) + 's';
-            r.style.animationDelay = Math.random() * 5 + 's';
-            r.style.opacity = Math.random() * 0.5 + 0.2;
-            layer.appendChild(r);
-        }
-
-        const words = "Happy Birthday, Sumitra.";
-        let charIndex = 0;
-        function typeWriter() {
-            const target = document.getElementById('type-target');
-            if (charIndex < words.length) {
-                target.innerHTML += words.charAt(charIndex);
-                charIndex++;
-                setTimeout(typeWriter, 100);
-            } else {
-                setTimeout(() => transition('scene1', 'scene2'), 2000);
-            }
-        }
-
-        const birthdayDate = "April 20, 2026";
-        let dateIndex = 0;
-        function typeDate() {
-            const dateTarget = document.getElementById('date-typing');
-            if (dateIndex < birthdayDate.length) {
-                dateTarget.innerHTML += birthdayDate.charAt(dateIndex);
-                dateIndex++;
-                setTimeout(typeDate, 150);
-            }
-        }
-
-        function transition(curr, next) {
-            document.getElementById(curr).classList.remove('active-scene');
-            setTimeout(() => {
-                document.getElementById(curr).style.display = 'none';
-                const n = document.getElementById(next);
-                n.style.display = 'flex';
+                n.classList.add('active-scene');
+                if(next === 'scene2') typeDate();
                 
-                setTimeout(() => {
-                    n.classList.add('active-scene');
-                    if(next === 'scene2') typeDate();
-                    
-                    if(next === 'scene3') {
-                        // Immediately show the "A Message for You..." text
-                        document.getElementById('msg-text').style.opacity = '1';
+                if(next === 'scene3') {
+                    document.getElementById('msg-text').style.opacity = '1';
+                    setTimeout(() => {
+                        document.getElementById('teddy-scene3').style.opacity = '0';
+                        const envelope = document.getElementById('envelope');
+                        envelope.style.opacity = '1';
                         
+                        // HINT LOGIC FIX: Only show hint if envelope hasn't been opened yet
                         setTimeout(() => {
-                            // Teddy fades out
-                            document.getElementById('teddy-scene3').style.opacity = '0';
-                            
-                            // Envelope starts its 2s fade-in
-                            const envelope = document.getElementById('envelope');
-                            envelope.style.opacity = '1';
-                            
-                            // Hint text will only appear AFTER the envelope has fully faded in
-                            // Envelope transition is 2s (set in CSS), so we wait 2s for it to finish
-                            setTimeout(() => {
+                            const isOpened = document.getElementById('envelope').classList.contains('open');
+                            if (!isOpened) {
                                 document.getElementById('hint-text').style.opacity = '1';
-                            }, 10000); 
+                            }
+                        }, 2000); 
+                    }, 2000);
+                }
+            }, 50);
 
-                        }, 2000);
-                    }
-                }, 50);
+            if(next === 'scene2') setTimeout(blowCandle, 6000);
+        }, 1000);
+    }
 
-                if(next === 'scene2') setTimeout(blowCandle, 6000);
-            }, 1000);
-        }
+    function blowCandle() {
+        document.getElementById('flame').style.opacity = '0';
+        setTimeout(() => transition('scene2', 'scene3'), 1500);
+    }
 
-        function blowCandle() {
-            document.getElementById('flame').style.opacity = '0';
-            setTimeout(() => transition('scene2', 'scene3'), 1500);
-        }
+    function openLetter() {
+        const env = document.getElementById('envelope');
+        const hint = document.getElementById('hint-text');
+        
+        // HIDE HINT IMMEDIATELY
+        hint.style.display = 'none'; 
+        
+        env.classList.add('open');
+        setTimeout(() => {
+            document.getElementById('manuscript-popup').classList.add('popup-active');
+        }, 800);
+    }
 
-        function openLetter() {
-            const env = document.getElementById('envelope');
-            env.classList.add('open');
+    function goToOrbit() {
+        document.getElementById('manuscript-popup').classList.remove('popup-active');
+        const env = document.getElementById('envelope');
+        env.style.transform = "scale(0) translateY(-200px)";
+        env.style.opacity = "0";
+        setTimeout(() => {
+            transition('scene3', 'scene4');
+            setTimeout(startOrbit, 1200);
+        }, 500);
+    }
+
+    function startOrbit() {
+        const orbits = document.querySelectorAll('.photo-orbit');
+        const main = document.getElementById('center-photo');
+        const container = document.getElementById('satellite-container');
+        const isPortrait = window.innerHeight > window.innerWidth;
+        const radius = isPortrait ? window.innerWidth * 0.4 : window.innerWidth * 0.4;
+
+        [...orbits, main].forEach((p, idx) => {
             setTimeout(() => {
-                document.getElementById('manuscript-popup').classList.add('popup-active');
-            }, 800);
-        }
+                p.style.opacity = '1';
+                if (p !== main) {
+                    const angle = (idx / orbits.length) * 360;
+                    const x = Math.sin(angle * Math.PI / 180) * radius;
+                    const z = Math.cos(angle * Math.PI / 180) * radius;
+                    p.style.transform = `translateX(${x}px) translateZ(${z}px) rotateY(${angle}deg)`;
+                } else {
+                    p.style.transform = `translateZ(50px)`;
+                }
+            }, idx * 150);
+        });
 
-        function goToOrbit() {
-            document.getElementById('manuscript-popup').classList.remove('popup-active');
-            const env = document.getElementById('envelope');
-            env.style.transform = "scale(0) translateY(-200px)";
-            env.style.opacity = "0";
-            setTimeout(() => {
-                transition('scene3', 'scene4');
-                setTimeout(startOrbit, 1200);
-            }, 500);
-        }
-
-        function startOrbit() {
-            const orbits = document.querySelectorAll('.photo-orbit');
-            const main = document.getElementById('center-photo');
-            const container = document.getElementById('satellite-container');
-            const isPortrait = window.innerHeight > window.innerWidth;
-            const radius = isPortrait ? window.innerWidth * 0.4 : window.innerWidth * 0.4;
-
-            [...orbits, main].forEach((p, idx) => {
-                setTimeout(() => {
-                    p.style.opacity = '1';
-                    if (p !== main) {
-                        const angle = (idx / orbits.length) * 360;
-                        const x = Math.sin(angle * Math.PI / 180) * radius;
-                        const z = Math.cos(angle * Math.PI / 180) * radius;
-                        p.style.transform = `translateX(${x}px) translateZ(${z}px) rotateY(${angle}deg)`;
-                    } else {
-                        p.style.transform = `translateZ(50px)`;
-                    }
-                }, idx * 150);
-            });
-
-            setTimeout(() => {
-                container.style.animationPlayState = 'running';
-                document.getElementById('final-text').style.opacity = '1';
-            }, 2000);
-        }
-    </script>
+        setTimeout(() => {
+            container.style.animationPlayState = 'running';
+            document.getElementById('final-text').style.opacity = '1';
+        }, 2000);
+    }
+</script>
 </body>
 </html>
