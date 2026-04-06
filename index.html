@@ -58,7 +58,6 @@
                 padding: 12px 10px;
             }
         }
-        /* ---------------------------- */
 
         .ribbon-bg-layer {
             position: fixed;
@@ -236,7 +235,8 @@
             color: var(--accent);
             animation: pulseHint 1.5s infinite;
             opacity: 0;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.4s ease;
+            z-index: 1; 
         }
 
         @keyframes pulseHint { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.05); } }
@@ -496,12 +496,13 @@
                             const envelope = document.getElementById('envelope');
                             envelope.style.opacity = '1';
                             
-                            // NEW: Hint text only appears after envelope fade is complete (2s)
+                            // HINT TRIGGER: Wait 2100ms (Envelope transition is 2000ms)
                             setTimeout(() => {
-                                if (!document.getElementById('envelope').classList.contains('open')) {
+                                const env = document.getElementById('envelope');
+                                if (env && !env.classList.contains('open')) {
                                     document.getElementById('hint-text').style.opacity = '1';
                                 }
-                            }, 2000); 
+                            }, 2100); 
                         }, 2000);
                     }
                 }, 50);
@@ -519,8 +520,9 @@
             const env = document.getElementById('envelope');
             const hint = document.getElementById('hint-text');
             
-            // NEW: Immediately hide hint when clicked
+            // KILL HINT IMMEDIATELY
             hint.style.opacity = '0';
+            hint.style.display = 'none';
             
             env.classList.add('open');
             setTimeout(() => {
