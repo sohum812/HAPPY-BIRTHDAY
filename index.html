@@ -674,7 +674,7 @@ html, body {
 }
 .letter-next-btn:hover { box-shadow: 0 0 30px rgba(232,99,122,0.5); transform: scale(1.02); }
 
-/* ===================== PAGE 4: GALLERY ===================== */
+/* ===================== PAGE 4: ORBIT SYSTEM ===================== */
 #p4 { background: var(--midnight); }
 
 .gallery-title {
@@ -685,72 +685,36 @@ html, body {
   text-align: center;
   opacity: 0;
   animation: riseIn 1s 0.2s forwards;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   text-shadow: 0 0 40px rgba(201,169,110,0.3);
 }
 
-.gallery-3d {
-  position: relative;
-  width: clamp(260px, 60vw, 400px);
-  height: clamp(340px, 70vw, 520px);
-  perspective: 1000px;
+#orbit-system { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transform-style: preserve-3d; }
+#satellite-container { position: absolute; width: 100%; height: 100%; transform-style: preserve-3d; animation: rotateSystem 25s linear infinite; animation-play-state: paused; }
+.photo-card { position: absolute; background: #111; padding: 8px; border-radius: 8px; opacity: 0; object-fit: cover; left: 50%; top: 50%; transition: transform 0.6s ease, opacity 1s ease; border: 1px solid rgba(255,255,255,0.1); }
+
+.photo-main { z-index: 100; width: 230px; height: 310px; margin-left: -115px; margin-top: -155px; border: 4px solid white; }
+.photo-orbit { width: 185px; height: 250px; margin-left: -92.5px; margin-top: -125px; }
+
+@media (orientation: portrait) {
+  .photo-main { width: 180px; height: 250px; margin-left: -90px; margin-top: -125px; }
+  .photo-orbit { width: 108px; height: 150px; margin-left: -54px; margin-top: -75px; }
 }
 
-.gallery-ring {
-  position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
-  animation: galleryRotate 20s linear infinite;
-}
-@keyframes galleryRotate {
-  from { transform: rotateY(0deg); }
-  to { transform: rotateY(360deg); }
-}
-
-.g-card {
-  position: absolute;
-  width: 180px; height: 240px;
-  top: 50%; left: 50%;
-  margin: -120px -90px;
-  border-radius: 4px;
-  overflow: hidden;
-  border: 3px solid rgba(201,169,110,0.4);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.7);
-  transition: border-color 0.3s;
-  background: #1a0d2e;
-}
-.g-card img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  opacity: 0.9;
-}
-
-.g-center {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%,-50%) translateZ(10px);
-  width: 220px; height: 300px;
-  border-radius: 4px;
-  overflow: hidden;
-  border: 4px solid var(--gold);
-  box-shadow: 0 0 60px rgba(201,169,110,0.3), 0 30px 60px rgba(0,0,0,0.8);
-  z-index: 10;
-  background: #1a0d2e;
-}
-.g-center img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-}
+@keyframes rotateSystem { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
 
 .final-words {
   font-family: 'Sacramento', cursive;
   font-size: clamp(1.6rem, 4vw, 2.4rem);
   color: var(--rose);
   text-align: center;
-  margin-top: 30px;
+  margin-top: 10px;
   opacity: 0;
   text-shadow: 0 0 30px rgba(232,99,122,0.4);
   animation: breathe 3s 2s infinite;
+  position: absolute;
+  bottom: 8%;
+  width: 100%;
 }
 
 /* ===================== TRANSITIONS ===================== */
@@ -939,7 +903,7 @@ html, body {
     <div class="letter-greeting">Hello, Sadhika...</div>
     <div class="letter-body">
       May your day be as beautiful as your smile and as warm as your heart. You bring light, kindness, and joy wherever you go.<br><br>
-      I hope this year gives you endless reasons to smile, unforgettable moments, and dreams that turn into reality. May you be surrounded by love, laughter. May God khichdi, moong dal ka halwa, and mutton your heart desires.<br><br>
+      I hope this year gives you endless reasons to smile, unforgettable moments, and dreams that turn into reality. May you be surrounded by love, laughter, and all the khichdi, moong dal ka halwa, and mutton your heart desires.<br><br>
       Keep shining, always. 🌟
     </div>
     <div class="letter-sig">With love ❤</div>
@@ -947,14 +911,19 @@ html, body {
   </div>
 </div>
 
-<!-- ===== PAGE 4: GALLERY ===== -->
+<!-- ===== PAGE 4: ORBIT SYSTEM ===== -->
 <div class="page" id="p4">
   <div class="gallery-title">Memories & Moments</div>
-  <div class="gallery-3d">
-    <div class="gallery-ring" id="gallery-ring"></div>
-    <div class="g-center">
-      <img src="https://picsum.photos/seed/main1/400/600" alt="Memory" onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'600\' fill=\'%23e8637a\'><rect width=\'400\' height=\'600\'/><text x=\'50%25\' y=\'50%25\' fill=\'white\' text-anchor=\'middle\' font-size=\'60\'>🌸</text></svg>'">
+  <div id="orbit-system">
+    <div id="satellite-container">
+      <img src="https://picsum.photos/seed/a1/400/600" class="photo-card photo-orbit">
+      <img src="https://picsum.photos/seed/a2/400/600" class="photo-card photo-orbit">
+      <img src="https://picsum.photos/seed/a3/400/600" class="photo-card photo-orbit">
+      <img src="https://picsum.photos/seed/a4/400/600" class="photo-card photo-orbit">
+      <img src="https://picsum.photos/seed/a5/400/600" class="photo-card photo-orbit">
+      <img src="https://picsum.photos/seed/a6/400/600" class="photo-card photo-orbit">
     </div>
+    <img src="https://picsum.photos/seed/m1/500/750" class="photo-card photo-main" id="center-photo">
   </div>
   <div class="final-words" id="final-words">Happy Birthday, Sadhika! ❤️</div>
 </div>
@@ -1114,10 +1083,8 @@ function triggerPageAnimations(n){
   if(n===4){
     setupGallery();
     setTimeout(()=>{
-      const fw=document.getElementById('final-words');
-      fw.style.opacity='1';
       burst();
-    },2500);
+    },4000);
   }
 }
 
@@ -1209,29 +1176,36 @@ function goFromLetter(){
   setTimeout(()=>goToPage(4), 400);
 }
 
-// ===== GALLERY =====
-const photos=['a1','a2','a3','a4','a5','a6'];
+// ===== ORBIT SYSTEM (original) =====
 function setupGallery(){
-  const ring=document.getElementById('gallery-ring');
-  ring.innerHTML='';
-  const n=photos.length;
-  const isMobile=window.innerWidth<700;
-  const radius=isMobile?100:160;
-  photos.forEach((seed,i)=>{
-    const card=document.createElement('div');
-    card.className='g-card';
-    const angle=(i/n)*360;
-    const rad=angle*Math.PI/180;
-    const x=Math.sin(rad)*radius;
-    const z=Math.cos(rad)*radius;
-    card.style.transform=`rotateY(${angle}deg) translateZ(${radius}px)`;
-    const img=document.createElement('img');
-    img.src=`https://picsum.photos/seed/${seed}/300/400`;
-    img.alt='Memory';
-    img.onerror=function(){this.src=`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='400' fill='%23e8637a'><rect width='300' height='400'/><text x='50%25' y='50%25' fill='white' text-anchor='middle' font-size='80'>🌸</text></svg>`;};
-    card.appendChild(img);
-    ring.appendChild(card);
+  startOrbit();
+}
+
+function startOrbit() {
+  const orbits = document.querySelectorAll('.photo-orbit');
+  const main = document.getElementById('center-photo');
+  const container = document.getElementById('satellite-container');
+  const isPortrait = window.innerHeight > window.innerWidth;
+  const radius = isPortrait ? window.innerWidth * 0.4 : window.innerWidth * 0.4;
+
+  [...orbits, main].forEach((p, idx) => {
+    setTimeout(() => {
+      p.style.opacity = '1';
+      if (p !== main) {
+        const angle = (idx / orbits.length) * 360;
+        const x = Math.sin(angle * Math.PI / 180) * radius;
+        const z = Math.cos(angle * Math.PI / 180) * radius;
+        p.style.transform = `translateX(${x}px) translateZ(${z}px) rotateY(${angle}deg)`;
+      } else {
+        p.style.transform = `translateZ(50px)`;
+      }
+    }, idx * 150);
   });
+
+  setTimeout(() => {
+    container.style.animationPlayState = 'running';
+    document.getElementById('final-words').style.opacity = '1';
+  }, 2000);
 }
 
 // ===== FINAL BURST =====
