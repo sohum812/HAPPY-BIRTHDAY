@@ -520,7 +520,7 @@ html, body {
 .env-body {
   position: absolute;
   inset: 0;
-  background: linear-gradient(-45deg, #23a6d5, #23d5ab, #ee7752, #e73c7e);
+  background: linear-gradient(-45deg,#23d5ab, #23a6d5, #e73c7e,  #ee7752);
   background-size: 400% 400%;
   animation: gradientBG 10s ease infinite;
   border-radius: 6px;
@@ -855,7 +855,7 @@ html, body {
 <!-- ===== PAGE 2: CAKE ===== -->
 <div class="page" id="p2">
   <div class="cake-scene">
-    <div class="cake-title">Make a Wish...</div>
+    <div class="cake-title">Make a Wish...<br><br></div>
     <div class="cake-wrap" id="cake-wrap">
       <div style="position:relative;">
         <div class="candle-wrap" id="candle-wrap">
@@ -899,7 +899,7 @@ html, body {
       </div>
       <div class="env-wax" id="env-wax">✿</div>
     </div>
-    <p style="font-family:'Cormorant Garamond';color:rgba(201,169,110,0.5);font-size:0.85rem;letter-spacing:0.2em;font-style:italic;">tap to open</p>
+    <p style="font-family:'Cormorant Garamond';color:rgba(201,169,110,0.5);font-size:1rem;letter-spacing:0.2em;font-style:italic;">Tap to open</p>
   </div>
 </div>
 
@@ -910,17 +910,19 @@ html, body {
     <div class="letter-greeting">Hello, Sadhika...</div>
     <div class="letter-body">
       May your day be as beautiful as your smile and as warm as your heart. You bring light, kindness, and joy wherever you go.<br><br>
-      I hope this year gives you endless reasons to smile, unforgettable moments, and dreams that turn into reality. May you be surrounded by love, laughter, and all the khichdi, moong dal ka halwa, and mutton your heart desires.<br><br>
+      I hope this year gives you endless reasons to smile, unforgettable moments, and dreams that turn into reality. May you be surrounded by love and laughter.<br><br> May God bless you with khichdi, moong dal ka halwa, mutton and everything you like.<br><br>
       Keep shining, always. 🌟
     </div>
-    <div class="letter-sig">With love ❤</div>
-    <button class="letter-next-btn" onclick="goFromLetter()">CONTINUE TO MEMORIES →</button>
+    
+    <button class="letter-next-btn" onclick="goFromLetter()">CONTINUE  →
+
+    </button>
   </div>
 </div>
 
 <!-- ===== PAGE 4: ORBIT SYSTEM ===== -->
 <div class="page" id="p4">
-  <div class="gallery-title">Memories & Moments</div>
+ 
   <div id="orbit-system">
     <div id="satellite-container">
       <img src="https://picsum.photos/seed/a1/400/600" class="photo-card photo-orbit">
