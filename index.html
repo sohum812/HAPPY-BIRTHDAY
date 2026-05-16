@@ -520,17 +520,24 @@ html, body {
 .env-body {
   position: absolute;
   inset: 0;
-  background: linear-gradient(145deg, #fdf6ee, #f5e8d0);
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradientBG 10s ease infinite;
   border-radius: 6px;
   overflow: hidden;
-  border: 1px solid rgba(201,169,110,0.4);
-  box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,169,110,0.15);
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
 }
 .env-body::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, transparent 40%, rgba(201,169,110,0.1));
+  background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.08));
+}
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 /* Envelope fold lines */
 .env-fold-l, .env-fold-r, .env-fold-b {
@@ -593,10 +600,10 @@ html, body {
 .env-flap-face {
   position: absolute;
   inset: 0;
-  background: linear-gradient(165deg, #fdf6ee, #edddc0);
+  background: rgba(255,255,255,0.1);
   clip-path: polygon(0 0, 100% 0, 50% 90%);
   border-radius: 6px 6px 0 0;
-  border-bottom: 1px solid rgba(201,169,110,0.3);
+  border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 
 /* Letter content popup */
